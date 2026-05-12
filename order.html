@@ -408,24 +408,32 @@ async function handlePayment() {
       btn.disabled = false; updateTotal(); return;
     }
 
-    // Fire GHL webhook
-    fetch(GHL_WEBHOOK_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name, email, phone, marketing_optin: optin,
-        product: 'prospecting-playbook',
-        addons: {
-          tracker: bumps.tracker.selected,
-          commissions_xray: bumps.xray.selected,
-          market_mind: bumps.market.selected
-        },
-        amount_paid: total,
-        payment_id: result.paymentIntent.id,
-        setup_intent: result.paymentIntent.id,
-        timestamp: new Date().toISOString()
-      })
-    }).catch(function(err) { console.warn('Webhook failed:', err); });
+    // Fire GHL webhook - await it before redirecting
+    const webhookData = JSON.stringify({
+      name, email, phone, marketing_optin: optin,
+      product: 'prospecting-playbook',
+      addons: {
+        tracker: bumps.tracker.selected,
+        commissions_xray: bumps.xray.selected,
+        market_mind: bumps.market.selected
+      },
+      amount_paid: total,
+      payment_id: result.paymentIntent.id,
+      setup_intent: result.paymentIntent.id,
+      timestamp: new Date().toISOString()
+    });
+
+    try {
+      await fetch(GHL_WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: webhookData
+      });
+    } catch (err) {
+      // If fetch fails, try sendBeacon as backup
+      try { navigator.sendBeacon(GHL_WEBHOOK_URL, new Blob([webhookData], { type: 'application/json' })); }
+      catch (e) { console.warn('Webhook backup also failed:', e); }
+    }
 
     // Store payment info for upsell page
     sessionStorage.setItem('pp_customer', JSON.stringify({
