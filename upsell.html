@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>One More Thing — Career Review Call</title>
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Oswald:wght@400;500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --yellow: #FFD100; --yellow-hot: #FFE344; --yellow-dark: #C9A400;
+  --yellow-glow: #FFF3A0; --black: #0A0A0A; --black-ink: #111111;
+  --white: #F4F0E8; --white-pure: #FFFFFF; --grey-paper: #E8E2D6;
+  --grey-mid: #888;
+}
+body {
+  font-family: 'EB Garamond', Georgia, serif;
+  background: var(--white); color: var(--black);
+  font-size: 19px; line-height: 1.7; overflow-x: hidden;
+}
+body::before {
+  content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 9999;
+}
+.container { max-width: 700px; margin: 0 auto; padding: 0 24px; }
+
+/* Confirmation bar */
+.confirm-bar {
+  background: var(--yellow); border-bottom: 5px solid var(--black);
+  text-align: center; padding: 16px 24px;
+  font-family: 'Bangers', cursive; font-size: 22px;
+  color: var(--black); letter-spacing: 1px;
+  position: relative;
+}
+.confirm-bar::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  background: repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(0,0,0,0.04) 8px, rgba(0,0,0,0.04) 9px),
+    repeating-linear-gradient(-45deg, transparent, transparent 8px, rgba(0,0,0,0.04) 8px, rgba(0,0,0,0.04) 9px);
+  pointer-events: none;
+}
+
+/* Pitch */
+.pitch { padding: 50px 0 40px; }
+.pitch h2 {
+  font-family: 'Bangers', cursive; font-size: clamp(28px, 4.5vw, 40px);
+  font-weight: 400; line-height: 1.2; color: var(--black);
+  text-shadow: 2px 2px 0 var(--yellow); margin-bottom: 24px;
+}
+.pitch p { margin-bottom: 18px; }
+
+.offer-box {
+  background: var(--yellow-glow); border: 3px solid var(--black);
+  box-shadow: 5px 5px 0 var(--black); padding: 28px 24px; margin: 28px 0;
+}
+.offer-box h3 {
+  font-family: 'Bangers', cursive; font-size: 24px; color: var(--black);
+  margin-bottom: 14px;
+}
+.offer-box p { margin-bottom: 12px; font-size: 17px; line-height: 1.6; }
+.offer-box p:last-child { margin-bottom: 0; }
+
+.price-tag {
+  display: inline-block; background: var(--black); color: var(--yellow);
+  font-family: 'Bangers', cursive; font-size: 28px; padding: 8px 24px;
+  border: 3px solid var(--black); box-shadow: 4px 4px 0 var(--yellow);
+  letter-spacing: 2px; margin: 20px 0;
+}
+
+/* Buttons */
+.yes-btn {
+  display: block; width: 100%; max-width: 480px; margin: 0 auto;
+  background: var(--yellow); color: var(--black);
+  font-family: 'Bangers', cursive; font-size: 22px; letter-spacing: 2px;
+  text-transform: uppercase; padding: 18px 24px;
+  border: 4px solid var(--black); box-shadow: 6px 6px 0 var(--black);
+  cursor: pointer; transition: all 0.12s ease; text-align: center;
+}
+.yes-btn:hover { transform: translate(-3px, -3px); box-shadow: 9px 9px 0 var(--black); background: var(--yellow-hot); }
+.yes-btn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--black); }
+.yes-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; box-shadow: 6px 6px 0 var(--black) !important; }
+
+.no-link {
+  display: block; text-align: center; margin-top: 20px;
+  color: var(--grey-mid); font-size: 13px; text-decoration: none;
+  font-family: 'Oswald', sans-serif; letter-spacing: 1px;
+}
+.no-link:hover { color: var(--black); }
+
+.secure-note {
+  text-align: center; font-size: 12px; color: var(--grey-mid);
+  margin-top: 14px; font-family: 'Oswald', sans-serif; letter-spacing: 1px;
+}
+
+#charge-error {
+  text-align: center; color: #D42020; font-size: 14px;
+  font-family: 'Oswald', sans-serif; margin-top: 10px; min-height: 20px;
+}
+
+.footer {
+  background: var(--black); color: var(--grey-mid);
+  text-align: center; padding: 24px 20px; font-size: 12px;
+  font-family: 'Oswald', sans-serif; letter-spacing: 2px;
+  border-top: 4px solid var(--yellow); margin-top: 40px;
+}
+
+@media (max-width: 600px) {
+  body { font-size: 17px; }
+  .pitch { padding: 36px 0 30px; }
+  .yes-btn { font-size: 18px; padding: 16px 18px; }
+}
+</style>
+</head>
+<body>
+
+<div class="confirm-bar">✓ Payment Confirmed. You're In.</div>
+
+<section class="pitch">
+  <div class="container">
+    <h2>Wait. Before You Go, There's One Thing That Could Save You Weeks.</h2>
+
+    <p>You've got the playbook. You've got the system. But here's what I've seen happen dozens of times: a rep follows the steps, gets 2 or 3 interviews lined up, and then gets stuck.</p>
+
+    <p>Maybe they're not sure which company to pick. Maybe the interview went sideways and they don't know why. Maybe they're staring at two offers and can't tell which one is the trap. Maybe they just freeze and stop executing.</p>
+
+    <p>That's where I come in.</p>
+
+    <div class="offer-box">
+      <h3>The 90-Minute Career Review Call</h3>
+      <p>A private 1-on-1 call with me, John Schuette, where I will:</p>
+      <p>Get you unstuck wherever you are in the sales-role-getting process. Review any companies you've already interviewed with and find the blind spots you're missing. Help you evaluate offers side by side so you make the right call, not the desperate one.</p>
+      <p>You reach out and book when you're ready. No expiration. Use it when you need it most.</p>
+    </div>
+
+    <div class="text-center" style="text-align: center;">
+      <div class="price-tag">$200</div>
+    </div>
+
+    <p style="text-align: center;">Your card on file will be charged $200 automatically when you click below.</p>
+
+    <button type="button" class="yes-btn" id="yes-btn" onclick="handleUpsell()">
+      Yes, Add the Career Review Call →
+    </button>
+    <div id="charge-error"></div>
+    <p class="secure-note">Charged to the same card you just used</p>
+
+    <a href="thank-you.html" class="no-link">No thanks, I don't need the call right now</a>
+  </div>
+</section>
+
+<div class="footer">
+  © 2026 The Perfect Sales Company — Schuette Affiliates, LLC — Hollywood, CA
+</div>
+
+<script>
+const GHL_WEBHOOK_URL = 'https://services.leadconnectorhq.com/hooks/EjQAaziLbBXhpUgNMwoO/webhook-trigger/262f48c9-f124-473c-bcd6-0d67ef6fda41';
+const CREATE_UPSELL_CHARGE_URL = '/api/create-upsell-charge';
+
+async function handleUpsell() {
+  const btn = document.getElementById('yes-btn');
+  const errorEl = document.getElementById('charge-error');
+  errorEl.textContent = '';
+  btn.disabled = true;
+  btn.textContent = 'Processing...';
+
+  // Get customer info from sessionStorage (set by order page)
+  const customerData = JSON.parse(sessionStorage.getItem('pp_customer') || '{}');
+
+  if (!customerData.payment_id) {
+    errorEl.textContent = 'Session expired. Please contact support.';
+    btn.disabled = false;
+    btn.textContent = 'Yes, Add the Career Review Call →';
+    return;
+  }
+
+  try {
+    const res = await fetch(CREATE_UPSELL_CHARGE_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        amount: 20000,
+        email: customerData.email,
+        name: customerData.name,
+        original_payment_id: customerData.payment_id,
+        product: 'career-review-call'
+      })
+    });
+    const data = await res.json();
+
+    if (data.error) {
+      errorEl.textContent = data.error;
+      btn.disabled = false;
+      btn.textContent = 'Yes, Add the Career Review Call →';
+      return;
+    }
+
+    // Fire GHL webhook for upsell
+    fetch(GHL_WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: customerData.name,
+        email: customerData.email,
+        phone: customerData.phone,
+        product: 'career-review-call',
+        amount_paid: 200,
+        upsell_payment_id: data.payment_id,
+        timestamp: new Date().toISOString()
+      })
+    }).catch(function(err) { console.warn('Webhook failed:', err); });
+
+    window.location.href = 'thank-you.html';
+
+  } catch (err) {
+    errorEl.textContent = 'Something went wrong. Please try again.';
+    btn.disabled = false;
+    btn.textContent = 'Yes, Add the Career Review Call →';
+  }
+}
+
+}
+</script>
+</body>
+</html>

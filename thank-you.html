@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>You're In — Welcome</title>
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Oswald:wght@400;500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --yellow: #FFD100; --yellow-hot: #FFE344; --yellow-dark: #C9A400;
+  --yellow-glow: #FFF3A0; --black: #0A0A0A; --black-ink: #111111;
+  --white: #F4F0E8; --white-pure: #FFFFFF; --grey-paper: #E8E2D6;
+  --grey-mid: #888;
+}
+body {
+  font-family: 'EB Garamond', Georgia, serif;
+  background: var(--white); color: var(--black);
+  font-size: 19px; line-height: 1.7; overflow-x: hidden;
+}
+body::before {
+  content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 9999;
+}
+.container { max-width: 700px; margin: 0 auto; padding: 0 24px; }
+
+/* Confirmation bar */
+.confirm-bar {
+  background: var(--yellow); border-bottom: 5px solid var(--black);
+  text-align: center; padding: 20px 24px;
+  font-family: 'Bangers', cursive; font-size: 26px;
+  color: var(--black); letter-spacing: 1px;
+  position: relative;
+}
+.confirm-bar::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  background: repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(0,0,0,0.04) 8px, rgba(0,0,0,0.04) 9px),
+    repeating-linear-gradient(-45deg, transparent, transparent 8px, rgba(0,0,0,0.04) 8px, rgba(0,0,0,0.04) 9px);
+  pointer-events: none;
+}
+
+/* Share section */
+.share-section { padding: 50px 0 44px; }
+.share-section h2 {
+  font-family: 'Bangers', cursive; font-size: clamp(26px, 4.5vw, 36px);
+  font-weight: 400; line-height: 1.2; color: var(--black);
+  text-shadow: 2px 2px 0 var(--yellow); margin-bottom: 10px;
+}
+.share-section .share-sub {
+  font-size: 17px; color: var(--grey-mid); margin-bottom: 28px;
+}
+
+.share-post-card {
+  background: var(--white-pure); border: 3px solid var(--black);
+  box-shadow: 5px 5px 0 var(--black); padding: 22px 22px 18px;
+  margin-bottom: 20px; position: relative;
+}
+.share-post-card .platform-tag {
+  display: inline-block; font-family: 'Oswald', sans-serif;
+  font-size: 11px; font-weight: 600; letter-spacing: 2px;
+  text-transform: uppercase; background: var(--black); color: var(--yellow);
+  padding: 3px 10px; margin-bottom: 12px;
+}
+.share-post-card .post-text {
+  font-size: 16px; line-height: 1.6; color: var(--black-ink);
+  white-space: pre-wrap; margin-bottom: 14px;
+}
+
+.copy-btn {
+  display: inline-block; background: var(--yellow); color: var(--black);
+  font-family: 'Bangers', cursive; font-size: 15px; letter-spacing: 1.5px;
+  text-transform: uppercase; padding: 8px 20px;
+  border: 3px solid var(--black); box-shadow: 3px 3px 0 var(--black);
+  cursor: pointer; transition: all 0.12s ease;
+}
+.copy-btn:hover { transform: translate(-2px, -2px); box-shadow: 5px 5px 0 var(--black); }
+.copy-btn:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 var(--black); }
+.copy-btn.copied { background: var(--black); color: var(--yellow); }
+
+.share-buttons {
+  display: flex; gap: 12px; flex-wrap: wrap; margin-top: 24px;
+}
+.share-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--black); color: var(--white);
+  font-family: 'Oswald', sans-serif; font-size: 13px; font-weight: 600;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  padding: 10px 18px; border: 3px solid var(--black);
+  box-shadow: 3px 3px 0 var(--black); text-decoration: none;
+  transition: all 0.12s ease;
+}
+.share-btn:hover {
+  background: var(--yellow); color: var(--black);
+  transform: translate(-2px, -2px); box-shadow: 5px 5px 0 var(--black);
+}
+
+/* Divider */
+.divider {
+  width: 100%; height: 5px; background: var(--yellow);
+  border-top: 2px solid var(--black); border-bottom: 2px solid var(--black);
+}
+
+/* Social links section */
+.social-section {
+  padding: 50px 0;
+  text-align: center;
+}
+.social-section h2 {
+  font-family: 'Bangers', cursive; font-size: 28px;
+  color: var(--black); text-shadow: 2px 2px 0 var(--yellow);
+  margin-bottom: 10px;
+}
+.social-section .social-sub {
+  font-size: 17px; color: var(--grey-mid); margin-bottom: 30px;
+}
+
+.social-links {
+  display: flex; justify-content: center; gap: 16px; flex-wrap: wrap;
+}
+.social-link {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--black); color: var(--yellow);
+  font-family: 'Bangers', cursive; font-size: 18px; letter-spacing: 1px;
+  padding: 14px 28px; text-decoration: none;
+  border: 3px solid var(--black); box-shadow: 5px 5px 0 var(--black);
+  transition: all 0.12s ease;
+}
+.social-link:hover {
+  background: var(--yellow); color: var(--black);
+  transform: translate(-2px, -2px); box-shadow: 7px 7px 0 var(--black);
+}
+.social-link svg {
+  width: 22px; height: 22px; fill: currentColor;
+}
+
+.footer {
+  background: var(--black); color: var(--grey-mid);
+  text-align: center; padding: 24px 20px; font-size: 12px;
+  font-family: 'Oswald', sans-serif; letter-spacing: 2px;
+  border-top: 4px solid var(--yellow);
+}
+
+@media (max-width: 600px) {
+  body { font-size: 17px; }
+  .social-link { padding: 12px 20px; font-size: 16px; }
+}
+</style>
+</head>
+<body>
+
+<!-- CONFIRMATION -->
+<div class="confirm-bar">✓ You're In. Welcome to the Playbook.</div>
+
+<!-- SHARE SECTION -->
+<section class="share-section">
+  <div class="container">
+    <h2>Tell Your Network You're Leveling Up</h2>
+    <p class="share-sub">Copy one of these and post it. Let people know you're not waiting around anymore.</p>
+
+    <div class="share-post-card">
+      <div class="platform-tag">LinkedIn / Facebook</div>
+      <div class="post-text" id="post-linkedin">Just invested in a prospecting system built specifically for sales reps.
+
+No more scrolling job boards and praying. No more taking the first offer because it's the only one on the table.
+
+I'm done waiting to be placed. Time to hunt.
+
+If you're a sales rep looking for your next role, check this out 👇
+https://theperfectsalescompany.com/prospecting-playbook</div>
+      <button class="copy-btn" onclick="copyPost('post-linkedin', this)">Copy Post</button>
+    </div>
+
+    <div class="share-post-card">
+      <div class="platform-tag">X / Twitter</div>
+      <div class="post-text" id="post-twitter">Just grabbed a prospecting playbook that finds companies, pulls hiring manager contacts, and builds your entire brand kit with AI.
+
+If you're a sales rep looking for a role, stop scrolling Indeed and start hunting.
+
+https://theperfectsalescompany.com/prospecting-playbook</div>
+      <button class="copy-btn" onclick="copyPost('post-twitter', this)">Copy Post</button>
+    </div>
+
+    <div class="share-post-card">
+      <div class="platform-tag">Instagram / Story</div>
+      <div class="post-text" id="post-ig">Done applying to roles and hoping for the best.
+
+Got a system now. 50+ pipelines, AI that builds my resume and brand kit, and a 5-day sprint to stack multiple offers.
+
+Link in bio if you want it too 👇</div>
+      <button class="copy-btn" onclick="copyPost('post-ig', this)">Copy Post</button>
+    </div>
+
+    <div class="share-buttons">
+      <a class="share-btn" href="https://twitter.com/intent/tweet?text=Just%20grabbed%20a%20sales%20rep%20prospecting%20system.%20Done%20waiting%20to%20be%20placed.%20Time%20to%20hunt.%20https://theperfectsalescompany.com/prospecting-playbook" target="_blank" rel="noopener">Share on X</a>
+      <a class="share-btn" href="https://www.facebook.com/sharer/sharer.php?u=https://theperfectsalescompany.com/prospecting-playbook" target="_blank" rel="noopener">Share on Facebook</a>
+      <a class="share-btn" href="https://www.linkedin.com/sharing/share-offsite/?url=https://theperfectsalescompany.com/prospecting-playbook" target="_blank" rel="noopener">Share on LinkedIn</a>
+    </div>
+  </div>
+</section>
+
+<!-- DIVIDER -->
+<div class="divider"></div>
+
+<!-- SOCIAL LINKS -->
+<section class="social-section">
+  <div class="container">
+    <h2>Follow John for More Sales Training</h2>
+    <p class="social-sub">Free content, live sessions, and behind-the-scenes of what's working right now.</p>
+
+    <div class="social-links">
+      <a class="social-link" href="https://www.youtube.com/@theperfectsalescompany" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        YouTube
+      </a>
+      <a class="social-link" href="https://www.facebook.com/john.schuette.338/" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        Facebook
+      </a>
+      <a class="social-link" href="https://www.instagram.com/realjohnschuette/" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+        Instagram
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<div class="footer">
+  © 2026 The Perfect Sales Company — Schuette Affiliates, LLC — Hollywood, CA
+</div>
+
+<script>
+function copyPost(elementId, btn) {
+  const text = document.getElementById(elementId).textContent;
+  navigator.clipboard.writeText(text).then(function() {
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(function() { btn.textContent = 'Copy Post'; btn.classList.remove('copied'); }, 2000);
+  }).catch(function() {
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(function() { btn.textContent = 'Copy Post'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+}
+</script>
+</body>
+</html>

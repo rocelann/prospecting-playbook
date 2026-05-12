@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Order — The Sales Rep Prospecting Playbook</title>
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Oswald:wght@400;500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+<script src="https://js.stripe.com/v3/"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --yellow: #FFD100; --yellow-hot: #FFE344; --yellow-dark: #C9A400;
+  --yellow-glow: #FFF3A0; --black: #0A0A0A; --black-ink: #111111;
+  --white: #F4F0E8; --white-pure: #FFFFFF; --grey-paper: #E8E2D6;
+  --grey-mid: #888; --red-error: #D42020;
+}
+body {
+  font-family: 'EB Garamond', Georgia, serif;
+  background: var(--black); color: var(--white);
+  font-size: 18px; line-height: 1.7;
+  min-height: 100vh; display: flex; flex-direction: column;
+  align-items: center; position: relative; overflow-x: hidden;
+}
+body::before {
+  content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 9999;
+}
+body::after {
+  content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(circle, rgba(255,209,0,0.12) 1px, transparent 1px);
+  background-size: 8px 8px; opacity: 0.25; pointer-events: none;
+}
+.order-wrapper {
+  width: 100%; max-width: 540px; padding: 50px 24px 60px;
+  position: relative; z-index: 1;
+}
+.order-card {
+  background: var(--white); color: var(--black);
+  border: 4px solid var(--black); box-shadow: 8px 8px 0 var(--black);
+  padding: 36px 30px; position: relative;
+}
+.order-card h1 {
+  font-family: 'Bangers', cursive; font-size: 30px; font-weight: 400;
+  line-height: 1.15; color: var(--black); margin-bottom: 6px;
+  text-shadow: 2px 2px 0 var(--yellow);
+}
+.order-card .subtitle {
+  font-size: 15px; color: var(--grey-mid); margin-bottom: 24px; line-height: 1.5;
+}
+
+/* Order summary */
+.order-summary {
+  background: var(--grey-paper); border: 2px solid var(--black);
+  box-shadow: 3px 3px 0 var(--black); padding: 18px 20px; margin-bottom: 24px;
+}
+.order-summary .item-row {
+  display: flex; justify-content: space-between; align-items: center; padding: 6px 0; font-size: 15px;
+}
+.order-summary .item-name {
+  font-family: 'Oswald', sans-serif; font-size: 12px; font-weight: 600;
+  letter-spacing: 1px; text-transform: uppercase;
+}
+.order-summary .item-price {
+  font-family: 'Bangers', cursive; font-size: 20px; letter-spacing: 1px;
+}
+.order-summary .total-row {
+  border-top: 3px solid var(--black); margin-top: 10px; padding-top: 12px;
+}
+.order-summary .total-row .item-price { font-size: 24px; }
+
+/* Order bumps */
+.order-bump {
+  border: 3px dashed var(--yellow); background: var(--yellow-glow);
+  padding: 20px; margin-bottom: 16px; position: relative;
+  cursor: pointer; transition: border-color 0.15s ease;
+}
+.order-bump:hover { border-color: var(--yellow-dark); }
+.order-bump-tag {
+  position: absolute; top: -13px; left: 16px;
+  background: var(--yellow); color: var(--black);
+  font-family: 'Bangers', cursive; font-size: 13px;
+  padding: 2px 14px; border: 2px solid var(--black);
+  box-shadow: 2px 2px 0 var(--black); letter-spacing: 2px; text-transform: uppercase;
+}
+.bump-header {
+  display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px;
+}
+.bump-checkbox {
+  flex-shrink: 0; width: 24px; height: 24px;
+  border: 3px solid var(--black); background: var(--white-pure);
+  box-shadow: 2px 2px 0 var(--black); position: relative;
+  margin-top: 2px; transition: all 0.12s ease;
+}
+.bump-checkbox.checked { background: var(--yellow); }
+.bump-checkbox.checked::after {
+  content: '✓'; position: absolute; top: -2px; left: 3px;
+  font-family: 'Bangers', cursive; font-size: 18px; color: var(--black);
+}
+.bump-title {
+  font-family: 'Bangers', cursive; font-size: 19px;
+  color: var(--black); line-height: 1.2;
+}
+.bump-title span {
+  font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 600;
+  color: var(--yellow-dark); letter-spacing: 1px;
+}
+.bump-desc {
+  font-size: 14px; color: var(--black-ink); line-height: 1.55; padding-left: 34px;
+}
+
+/* Bump divider */
+.bump-divider {
+  height: 1px; background: var(--grey-paper); margin: 20px 0;
+}
+
+/* Form fields */
+.form-group { margin-bottom: 16px; }
+.form-group label {
+  display: block; font-family: 'Oswald', sans-serif; font-size: 12px;
+  font-weight: 600; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--black); margin-bottom: 6px;
+}
+.form-group input {
+  width: 100%; padding: 13px 16px;
+  font-family: 'EB Garamond', Georgia, serif; font-size: 17px;
+  color: var(--black); background: var(--white-pure);
+  border: 3px solid var(--black); box-shadow: 3px 3px 0 var(--black);
+  outline: none; transition: box-shadow 0.12s ease, border-color 0.12s ease;
+}
+.form-group input:focus { border-color: var(--yellow); box-shadow: 3px 3px 0 var(--yellow); }
+.form-group input::placeholder { color: #bbb; }
+.error-msg {
+  color: var(--red-error); font-size: 13px; font-family: 'Oswald', sans-serif;
+  letter-spacing: 1px; margin-top: 4px; display: none;
+}
+
+/* Opt-in */
+.optin-group {
+  display: flex; align-items: flex-start; gap: 10px;
+  margin: 20px 0 24px; cursor: pointer;
+}
+.optin-group input[type="checkbox"] { display: none; }
+.optin-box {
+  flex-shrink: 0; width: 20px; height: 20px;
+  border: 2px solid var(--black); background: var(--white-pure);
+  box-shadow: 2px 2px 0 var(--black); position: relative;
+  margin-top: 2px; transition: all 0.12s ease;
+}
+.optin-group input:checked + .optin-box { background: var(--yellow); }
+.optin-group input:checked + .optin-box::after {
+  content: '✓'; position: absolute; top: -3px; left: 2px;
+  font-family: 'Bangers', cursive; font-size: 16px; color: var(--black);
+}
+.optin-label { font-size: 13px; line-height: 1.5; color: var(--grey-mid); }
+
+/* Stripe */
+.stripe-container { margin-bottom: 20px; }
+.stripe-container label {
+  display: block; font-family: 'Oswald', sans-serif; font-size: 12px;
+  font-weight: 600; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--black); margin-bottom: 6px;
+}
+#card-element {
+  padding: 14px 16px; background: var(--white-pure);
+  border: 3px solid var(--black); box-shadow: 3px 3px 0 var(--black);
+  transition: border-color 0.12s ease, box-shadow 0.12s ease;
+}
+#card-element.StripeElement--focus { border-color: var(--yellow); box-shadow: 3px 3px 0 var(--yellow); }
+#card-errors {
+  color: var(--red-error); font-size: 13px; font-family: 'Oswald', sans-serif;
+  letter-spacing: 1px; margin-top: 6px; min-height: 20px;
+}
+
+/* Pay button */
+.pay-btn {
+  display: block; width: 100%; background: var(--yellow); color: var(--black);
+  font-family: 'Bangers', cursive; font-size: 22px; letter-spacing: 2px;
+  text-transform: uppercase; padding: 18px 24px;
+  border: 4px solid var(--black); box-shadow: 6px 6px 0 var(--black);
+  cursor: pointer; transition: all 0.12s ease; text-align: center;
+}
+.pay-btn:hover { transform: translate(-3px, -3px); box-shadow: 9px 9px 0 var(--black); background: var(--yellow-hot); }
+.pay-btn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--black); }
+.pay-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; box-shadow: 6px 6px 0 var(--black) !important; }
+.secure-note {
+  text-align: center; font-size: 12px; color: var(--grey-mid);
+  margin-top: 14px; font-family: 'Oswald', sans-serif; letter-spacing: 1px;
+}
+.back-link {
+  display: block; text-align: center; margin-top: 18px;
+  color: var(--grey-mid); font-size: 14px; text-decoration: none;
+  font-family: 'Oswald', sans-serif; letter-spacing: 1px;
+}
+.back-link:hover { color: var(--yellow); }
+
+@media (max-width: 500px) {
+  .order-card { padding: 26px 18px; }
+  .order-card h1 { font-size: 26px; }
+  .pay-btn { font-size: 18px; padding: 16px 18px; }
+  .bump-desc { padding-left: 0; margin-top: 8px; }
+}
+</style>
+</head>
+<body>
+
+<div class="order-wrapper">
+  <div class="order-card">
+    <h1>Complete Your Order</h1>
+    <p class="subtitle">You're getting The Sales Rep Prospecting Playbook plus all bonuses. Add any extras below.</p>
+
+    <!-- ORDER SUMMARY -->
+    <div class="order-summary">
+      <div class="item-row">
+        <span class="item-name">The Sales Rep Prospecting Playbook</span>
+        <span class="item-price">$27</span>
+      </div>
+      <div class="item-row bump-line" data-bump="tracker" style="display: none;">
+        <span class="item-name">Sales Role Application Tracker</span>
+        <span class="item-price">$4</span>
+      </div>
+      <div class="item-row bump-line" data-bump="xray" style="display: none;">
+        <span class="item-name">Commissions X-Ray Machine</span>
+        <span class="item-price">$17</span>
+      </div>
+      <div class="item-row bump-line" data-bump="market" style="display: none;">
+        <span class="item-name">Read Your Market's Mind System</span>
+        <span class="item-price">$47</span>
+      </div>
+      <div class="item-row total-row">
+        <span class="item-name">Total</span>
+        <span class="item-price" id="total-price">$27</span>
+      </div>
+    </div>
+
+    <!-- BUMP 1: $4 Tracker -->
+    <div class="order-bump" onclick="toggleBump('tracker')">
+      <div class="order-bump-tag">Add-On #1</div>
+      <div class="bump-header">
+        <div class="bump-checkbox" id="check-tracker"></div>
+        <div class="bump-title">Sales Role Application &amp; Scoring Tracker<br><span>+ $4</span></div>
+      </div>
+      <p class="bump-desc">Track every interview, score each company on culture, management, and income opportunity, then analyze your roles side by side so you make the smartest decision instead of the fastest one.</p>
+    </div>
+
+    <!-- BUMP 2: $17 Commissions X-Ray -->
+    <div class="order-bump" onclick="toggleBump('xray')">
+      <div class="order-bump-tag">Add-On #2</div>
+      <div class="bump-header">
+        <div class="bump-checkbox" id="check-xray"></div>
+        <div class="bump-title">The Commissions X-Ray Machine<br><span>+ $17</span></div>
+      </div>
+      <p class="bump-desc">Reverse engineer your income goals to see exactly how much work it takes to hit your targets BEFORE you get hired. Know the calls, close rate, and deal flow required so you never accept a role that can't pay you what you're worth.</p>
+    </div>
+
+    <!-- BUMP 3: $47 Read Your Market's Mind -->
+    <div class="order-bump" onclick="toggleBump('market')">
+      <div class="order-bump-tag">Add-On #3</div>
+      <div class="bump-header">
+        <div class="bump-checkbox" id="check-market"></div>
+        <div class="bump-title">Read Your Market's Mind System<br><span>+ $47</span></div>
+      </div>
+      <p class="bump-desc">Once you're in a role, take all the data about your market and know exactly what they think, feel, believe, and what objections they have at every step through your funnel. Also works for getting your next sales role. The closest thing to reading your prospect's mind before they pick up the phone.</p>
+    </div>
+
+    <div class="bump-divider"></div>
+
+    <!-- CONTACT INFO -->
+    <div class="form-group">
+      <label for="name">Full Name</label>
+      <input type="text" id="name" placeholder="Your full name" required>
+      <p class="error-msg" id="name-error">Enter your name</p>
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input type="email" id="email" placeholder="you@email.com" required>
+      <p class="error-msg" id="email-error">Enter a valid email</p>
+    </div>
+
+    <div class="form-group">
+      <label for="phone">Phone</label>
+      <input type="tel" id="phone" placeholder="(555) 555-5555" required>
+      <p class="error-msg" id="phone-error">Enter your phone number</p>
+    </div>
+
+    <!-- MARKETING OPT-IN -->
+    <label class="optin-group">
+      <input type="checkbox" id="optin" checked>
+      <span class="optin-box"></span>
+      <span class="optin-label">I agree to receive texts and emails about sales training, tips, and offers. Unsubscribe anytime.</span>
+    </label>
+
+    <!-- STRIPE CARD ELEMENT -->
+    <div class="stripe-container">
+      <label>Card Details</label>
+      <div id="card-element"></div>
+      <div id="card-errors" role="alert"></div>
+    </div>
+
+    <!-- PAY BUTTON -->
+    <button type="button" class="pay-btn" id="pay-btn" onclick="handlePayment()">
+      Pay $27 Now →
+    </button>
+
+    <p class="secure-note">Secure 256-bit encrypted payment via Stripe</p>
+  </div>
+
+  <a href="index.html" class="back-link">← Back to playbook details</a>
+</div>
+
+<script>
+const GHL_WEBHOOK_URL = 'https://services.leadconnectorhq.com/hooks/EjQAaziLbBXhpUgNMwoO/webhook-trigger/c48d5d64-ade8-4943-9f3d-155b09a0b818';
+const STRIPE_PK = 'pk_live_51IWTnMJwKAUW9raswvCsRXsAv3BpeUsNYax8mLHZbJl2TL2QXf7b7MojYyF5bc0zVU4iXuamIRPRl1ebczAQDKx800ZzUBaKDo';
+const CREATE_PAYMENT_INTENT_URL = '/api/create-payment-intent';
+
+// Bump state
+const bumps = { tracker: { selected: false, price: 4 }, xray: { selected: false, price: 17 }, market: { selected: false, price: 47 } };
+const BASE = 27;
+
+function toggleBump(id) {
+  bumps[id].selected = !bumps[id].selected;
+  const check = document.getElementById('check-' + id);
+  const lines = document.querySelectorAll('.bump-line[data-bump="' + id + '"]');
+
+  if (bumps[id].selected) {
+    check.classList.add('checked');
+    lines.forEach(function(l) { l.style.display = 'flex'; });
+  } else {
+    check.classList.remove('checked');
+    lines.forEach(function(l) { l.style.display = 'none'; });
+  }
+  updateTotal();
+}
+
+function getTotal() {
+  let total = BASE;
+  Object.keys(bumps).forEach(function(k) { if (bumps[k].selected) total += bumps[k].price; });
+  return total;
+}
+
+function updateTotal() {
+  const total = getTotal();
+  document.getElementById('total-price').textContent = '$' + total;
+  document.getElementById('pay-btn').textContent = 'Pay $' + total + ' Now →';
+}
+
+// Stripe - wait for library to load
+let stripe, elements, cardElement;
+
+function initStripe() {
+  if (typeof Stripe === 'undefined') {
+    setTimeout(initStripe, 500);
+    return;
+  }
+  stripe = Stripe(STRIPE_PK);
+  elements = stripe.elements();
+  cardElement = elements.create('card', {
+    style: {
+      base: { fontFamily: "'EB Garamond', Georgia, serif", fontSize: '17px', color: '#0A0A0A', '::placeholder': { color: '#bbb' } },
+      invalid: { color: '#D42020' }
+    }
+  });
+  cardElement.mount('#card-element');
+  cardElement.on('change', function(e) { document.getElementById('card-errors').textContent = e.error ? e.error.message : ''; });
+}
+
+document.addEventListener('DOMContentLoaded', initStripe);
+
+async function handlePayment() {
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  const optin = document.getElementById('optin').checked;
+  const btn = document.getElementById('pay-btn');
+
+  ['name-error', 'email-error', 'phone-error'].forEach(function(id) { document.getElementById(id).style.display = 'none'; });
+
+  let valid = true;
+  if (!name) { document.getElementById('name-error').style.display = 'block'; valid = false; }
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { document.getElementById('email-error').style.display = 'block'; valid = false; }
+  if (!phone || phone.replace(/\D/g, '').length < 7) { document.getElementById('phone-error').style.display = 'block'; valid = false; }
+  if (!valid) return;
+
+  btn.disabled = true;
+  btn.textContent = 'Processing...';
+
+  try {
+    const total = getTotal();
+    const res = await fetch(CREATE_PAYMENT_INTENT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        amount: total * 100, email, name,
+        tracker: bumps.tracker.selected,
+        xray: bumps.xray.selected,
+        market: bumps.market.selected
+      })
+    });
+    const { clientSecret } = await res.json();
+
+    const result = await stripe.confirmCardPayment(clientSecret, {
+      payment_method: { card: cardElement, billing_details: { name, email, phone } }
+    });
+
+    if (result.error) {
+      document.getElementById('card-errors').textContent = result.error.message;
+      btn.disabled = false; updateTotal(); return;
+    }
+
+    // Fire GHL webhook
+    fetch(GHL_WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name, email, phone, marketing_optin: optin,
+        product: 'prospecting-playbook',
+        addons: {
+          tracker: bumps.tracker.selected,
+          commissions_xray: bumps.xray.selected,
+          market_mind: bumps.market.selected
+        },
+        amount_paid: total,
+        payment_id: result.paymentIntent.id,
+        setup_intent: result.paymentIntent.id,
+        timestamp: new Date().toISOString()
+      })
+    }).catch(function(err) { console.warn('Webhook failed:', err); });
+
+    // Store payment info for upsell page
+    sessionStorage.setItem('pp_customer', JSON.stringify({
+      name, email, phone, payment_id: result.paymentIntent.id
+    }));
+
+    window.location.href = 'upsell.html';
+
+  } catch (err) {
+    document.getElementById('card-errors').textContent = 'Something went wrong. Please try again.';
+    btn.disabled = false; updateTotal();
+  }
+}
+
+document.addEventListener('keydown', function(e) { if (e.key === 'Enter') { e.preventDefault(); handlePayment(); } });
+</script>
+</body>
+</html>
