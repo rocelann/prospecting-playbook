@@ -31,8 +31,8 @@ body {
   font-family: 'EB Garamond', Georgia, serif;
   background: var(--white);
   color: var(--black);
-  font-size: 19px;
-  line-height: 1.7;
+  font-size: 22px;
+  line-height: 1.8;
   position: relative;
   overflow-x: hidden;
 }
@@ -131,7 +131,7 @@ body::before {
 }
 
 .hero .sub-head {
-  font-size: 21px;
+  font-size: 24px;
   text-align: center;
   max-width: 620px;
   margin: 0 auto 40px;
@@ -249,15 +249,15 @@ body::before {
 }
 .deliverable-card h4 {
   font-family: 'Bangers', cursive;
-  font-size: 24px;
+  font-size: 28px;
   font-weight: 400;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   color: var(--black);
   letter-spacing: 0.5px;
 }
 .deliverable-card p {
-  font-size: 17px;
-  line-height: 1.6;
+  font-size: 20px;
+  line-height: 1.7;
   color: var(--black-ink);
 }
 .deliverable-card .value-tag {
@@ -799,21 +799,105 @@ body::before {
   font-size: 24px;
 }
 
+/* ═══ HOLY GRAIL CARD (black bg, gold/white text) ═══ */
+.deliverable-card.grail-card {
+  background: var(--black);
+  border-color: #B8972E;
+  box-shadow: 6px 6px 0 #B8972E;
+}
+.deliverable-card.grail-card::before {
+  background: #B8972E;
+  color: var(--black);
+}
+.deliverable-card.grail-card::after {
+  border-top-color: #B8972E;
+  border-right-color: #B8972E;
+}
+.deliverable-card.grail-card h4 {
+  color: #B8972E;
+}
+.deliverable-card.grail-card p {
+  color: var(--white);
+}
+.deliverable-card.grail-card .value-tag {
+  background: #B8972E;
+  color: var(--black);
+  border-color: #B8972E;
+  box-shadow: 3px 3px 0 rgba(184,151,46,0.4);
+}
+.deliverable-card.grail-card .value-tag.free-tag {
+  background: var(--black);
+  color: #B8972E;
+  border-color: #B8972E;
+}
+.deliverable-card.grail-card:hover {
+  box-shadow: 8px 8px 0 #B8972E;
+}
+
+/* ═══ STORY SECTION ═══ */
+.story-section {
+  padding: 60px 0;
+  position: relative;
+}
+.story-photo {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  border: 4px solid var(--black);
+  box-shadow: 6px 6px 0 var(--yellow);
+  object-fit: cover;
+  display: block;
+  margin: 0 auto 28px;
+}
+.story-lifestyle {
+  width: 100%;
+  max-width: 500px;
+  display: block;
+  margin: 28px auto;
+  border: 3px solid var(--black);
+  box-shadow: 6px 6px 0 var(--black);
+}
+.story-section h2 {
+  font-family: 'Bangers', cursive;
+  font-size: clamp(28px, 4.5vw, 42px);
+  font-weight: 400;
+  line-height: 1.2;
+  margin-bottom: 26px;
+  color: var(--black);
+  text-shadow: 2px 2px 0 var(--yellow);
+  text-align: center;
+}
+.story-section p {
+  margin-bottom: 20px;
+}
+
 /* ═══ RESPONSIVE ═══ */
 @media (max-width: 600px) {
-  body { font-size: 17px; }
+  body { font-size: 19px; }
   .container { padding: 0 18px; }
   .hero { padding: 50px 0 44px; }
+  .hero h1 { text-shadow: 2px 2px 0 var(--yellow); font-size: 32px; }
+  .hero .sub-head { font-size: 19px; margin-bottom: 30px; }
   .section { padding: 44px 0; }
   .pain-block, .takeaway-block, .guarantee-box { padding: 22px 18px; }
   .deliverable-card { padding: 24px 18px; }
-  .cta-btn { padding: 16px 28px; font-size: 18px; }
-  .hero h1 { text-shadow: 2px 2px 0 var(--yellow); }
+  .deliverable-card h4 { font-size: 22px; }
+  .deliverable-card p { font-size: 17px; }
+  .cta-btn { padding: 16px 28px; font-size: 18px; width: 100%; text-align: center; }
+  .break-bar { font-size: 18px; padding: 22px 18px; }
   .price-section { padding: 50px 0; }
+  .price-actual { font-size: 56px; }
   .order-form-section { padding: 26px 18px; }
   .pay-btn { font-size: 18px; padding: 16px 18px; }
   .bump-desc { padding-left: 0; margin-top: 8px; }
   .card-mockup { max-width: 260px; }
+  .hero-mockup { box-shadow: 4px 4px 0 var(--black); }
+  .story-photo { width: 160px; height: 160px; }
+  .story-lifestyle { max-width: 100%; box-shadow: 4px 4px 0 var(--black); }
+  .story-section { padding: 44px 0; }
+  .story-section h2 { font-size: 28px; }
+  .grail-card { box-shadow: 4px 4px 0 #B8972E; }
+  .value-tag { font-size: 14px; }
 }
 </style>
 </head>
@@ -891,62 +975,69 @@ body::before {
     </div>
 
     <div class="deliverable-card" data-number="02">
+      <h4>Ideal Company Research Machine</h4>
+      <img loading="lazy" src="img-ideal-company.png" alt="Ideal Company Research Machine" class="card-mockup">
+      <p>Journal about exactly what you want to sell and in what market, then take that and research all the companies you can find that match your ideal criteria, so you're only talking to potential perfect matches, every time.</p>
+      <span class="value-tag">Value: $27</span>
+    </div>
+
+    <div class="deliverable-card" data-number="03">
       <h4>6 Company Research Strategies</h4>
       <img loading="lazy" src="img-research-system.png" alt="Company Research Strategies" class="card-mockup">
       <p>Step-by-step Claude prompts for Google, Skool, YouTube, Facebook Ads Library, Instagram, and LinkedIn. Copy, paste, run.</p>
       <span class="value-tag">Value: $27</span>
     </div>
 
-    <div class="deliverable-card" data-number="03">
+    <div class="deliverable-card" data-number="04">
       <h4>A Complete Branding Toolkit</h4>
       <img loading="lazy" src="img-brand-builder.png" alt="The Brand Builder Kit" class="card-mockup">
       <p>Resume rebuild prompt, social media audit, master bio, cover photo generator, intro video script, group posting templates, and pre-written application answers. All copy-paste ready.</p>
       <span class="value-tag">Value: $27</span>
     </div>
 
-    <div class="deliverable-card" data-number="04">
+    <div class="deliverable-card" data-number="05">
       <h4>Contact Scraping Walkthrough</h4>
       <img loading="lazy" src="img-contact-finder.png" alt="Contact Scraping Walkthrough" class="card-mockup">
       <p>The 7 best tools (all with free tiers) to get emails and phone numbers for decision-makers at every company on your list.</p>
       <span class="value-tag">Value: $7</span>
     </div>
 
-    <div class="deliverable-card" data-number="05">
+    <div class="deliverable-card" data-number="06">
       <h4>Outreach Frameworks</h4>
       <img loading="lazy" src="img-double-tap.png" alt="Outreach Frameworks" class="card-mockup">
       <p>Cold call and cold email structures plus a 3-touch follow-up sequence.</p>
       <span class="value-tag">Value: $7</span>
     </div>
 
-    <div class="deliverable-card" data-number="06">
+    <div class="deliverable-card grail-card" data-number="07">
       <h4>A Master Resource List</h4>
       <img loading="lazy" src="img-pipeline-list.png" alt="Master Resource List" class="card-mockup">
       <p>50+ sales recruiting agencies, DFY sales agencies, talent marketplaces, job boards, Facebook groups, Reddit communities, and freelance platforms. Register for all of them in one sitting.</p>
       <span class="value-tag">Value: $27</span>
     </div>
 
-    <div class="deliverable-card" data-number="07">
+    <div class="deliverable-card" data-number="08">
       <h4>The Automated Job Search Engine</h4>
       <img loading="lazy" src="img-job-search.png" alt="Automated Job Search Engine" class="card-mockup">
       <p>One prompt that searches Indeed, ZipRecruiter, LinkedIn, Glassdoor, PhoneSales.com, Closers.io, Reddit, and more simultaneously. You get a prioritized list of roles with links.</p>
       <span class="value-tag">Value: $127</span>
     </div>
 
-    <div class="deliverable-card" data-number="08">
+    <div class="deliverable-card" data-number="09">
       <h4>21 Questions to Vet Any Offer</h4>
       <img loading="lazy" src="img-vetting-checklist.png" alt="21 Questions to Vet Any Offer" class="card-mockup">
       <p>So you never end up on a dead role again. Plus a Claude prompt that calculates your realistic earning potential before you say yes.</p>
       <span class="value-tag">Value: $30</span>
     </div>
 
-    <div class="deliverable-card" data-number="09">
+    <div class="deliverable-card" data-number="10">
       <h4>The Offer Evaluation Calculator</h4>
       <img loading="lazy" src="img-offer-calculator.png" alt="Offer Evaluation Calculator" class="card-mockup">
       <p>Dump everything you know about a potential role and get your realistic earning potential across best, average, and worst case scenarios with red flags identified before you accept.</p>
       <span class="value-tag">Value: $27</span>
     </div>
 
-    <div class="deliverable-card bonus-card" data-number="BONUS">
+    <div class="deliverable-card grail-card" data-number="BONUS">
       <h4>The Delusional Confidence Masterclass</h4>
       <p>Here's the truth nobody talks about: most reps don't struggle with skills. They struggle with self-worth. They don't feel worthy of the $15K/month role. They don't feel confident enough to cold call a founder. They undersell themselves in interviews because deep down they don't believe they deserve the offer.</p>
       <p style="margin-top: 14px;">When you grab the playbook, you get access to the Delusional Confidence Masterclass designed to help you sell yourself on your own value so you show up to every conversation, every call, and every interview knowing exactly what you're worth.</p>
@@ -954,7 +1045,7 @@ body::before {
       <span class="value-tag free-tag">FREE Bonus</span>
     </div>
 
-    <div class="deliverable-card bonus-card" data-number="BONUS">
+    <div class="deliverable-card grail-card" data-number="BONUS">
       <h4>"Why Skilled Reps Don't Perform" Ebook + All Future Bonuses</h4>
       <p>When you buy today, you get access to the upcoming "Why Skilled Reps Don't Perform" ebook the moment it's complete, plus every bonus that ships with it. This is the book on why talented sales reps sabotage their own numbers and what to do about it. So when you land the role, your mental blocks don't get in the way of performing.</p>
       <span class="value-tag free-tag">FREE Bonus (Value: $297+)</span>
@@ -968,26 +1059,27 @@ body::before {
   <div class="container">
 
     <div style="max-width: 480px; margin: 0 auto 36px; text-align: left; position: relative;">
-      <p style="color: var(--grey-mid); margin-bottom: 8px; font-size: 17px;">5-Day Sprint Plan <span style="float:right; color: var(--white);">$97</span></p>
-      <p style="color: var(--grey-mid); margin-bottom: 8px; font-size: 17px;">6 Company Research Strategies <span style="float:right; color: var(--white);">$27</span></p>
-      <p style="color: var(--grey-mid); margin-bottom: 8px; font-size: 17px;">Complete Branding Toolkit <span style="float:right; color: var(--white);">$27</span></p>
-      <p style="color: var(--grey-mid); margin-bottom: 8px; font-size: 17px;">Contact Scraping Walkthrough <span style="float:right; color: var(--white);">$7</span></p>
-      <p style="color: var(--grey-mid); margin-bottom: 8px; font-size: 17px;">Outreach Frameworks <span style="float:right; color: var(--white);">$7</span></p>
-      <p style="color: var(--grey-mid); margin-bottom: 8px; font-size: 17px;">Master Resource List (50+) <span style="float:right; color: var(--white);">$27</span></p>
-      <p style="color: var(--grey-mid); margin-bottom: 8px; font-size: 17px;">Automated Job Search Engine <span style="float:right; color: var(--white);">$127</span></p>
-      <p style="color: var(--grey-mid); margin-bottom: 8px; font-size: 17px;">21 Questions to Vet Any Offer <span style="float:right; color: var(--white);">$30</span></p>
-      <p style="color: var(--grey-mid); margin-bottom: 8px; font-size: 17px;">Offer Evaluation Calculator <span style="float:right; color: var(--white);">$27</span></p>
-      <p style="color: var(--yellow); margin-bottom: 8px; font-size: 17px;">Delusional Confidence Masterclass <span style="float:right;">FREE</span></p>
-      <p style="color: var(--yellow); margin-bottom: 8px; font-size: 17px;">"Why Skilled Reps Don't Perform" Ebook + Bonuses <span style="float:right;">$297+</span></p>
+      <p style="color: var(--grey-mid); margin-bottom: 8px; font-size: 20px;">5-Day Sprint Plan <span style="float:right; color: var(--white);">$97</span></p>
+      <p style="color: var(--grey-mid); margin-bottom: 8px; font-size: 20px;">Ideal Company Research Machine <span style="float:right; color: var(--white);">$27</span></p>
+      <p style="color: var(--grey-mid); margin-bottom: 8px; font-size: 20px;">6 Company Research Strategies <span style="float:right; color: var(--white);">$27</span></p>
+      <p style="color: var(--grey-mid); margin-bottom: 8px; font-size: 20px;">Complete Branding Toolkit <span style="float:right; color: var(--white);">$27</span></p>
+      <p style="color: var(--grey-mid); margin-bottom: 8px; font-size: 20px;">Contact Scraping Walkthrough <span style="float:right; color: var(--white);">$7</span></p>
+      <p style="color: var(--grey-mid); margin-bottom: 8px; font-size: 20px;">Outreach Frameworks <span style="float:right; color: var(--white);">$7</span></p>
+      <p style="color: var(--grey-mid); margin-bottom: 8px; font-size: 20px;">Master Resource List (50+) <span style="float:right; color: var(--white);">$27</span></p>
+      <p style="color: var(--grey-mid); margin-bottom: 8px; font-size: 20px;">Automated Job Search Engine <span style="float:right; color: var(--white);">$127</span></p>
+      <p style="color: var(--grey-mid); margin-bottom: 8px; font-size: 20px;">21 Questions to Vet Any Offer <span style="float:right; color: var(--white);">$30</span></p>
+      <p style="color: var(--grey-mid); margin-bottom: 8px; font-size: 20px;">Offer Evaluation Calculator <span style="float:right; color: var(--white);">$27</span></p>
+      <p style="color: var(--yellow); margin-bottom: 8px; font-size: 20px;">Delusional Confidence Masterclass <span style="float:right;">FREE</span></p>
+      <p style="color: var(--yellow); margin-bottom: 8px; font-size: 20px;">"Why Skilled Reps Don't Perform" Ebook + Bonuses <span style="float:right;">$297+</span></p>
       <div style="border-top: 2px solid var(--yellow); margin-top: 16px; padding-top: 12px;">
-        <p style="color: var(--white); font-size: 19px; font-family: 'Bangers', cursive; letter-spacing: 1px;">Total Value <span style="float:right; color: var(--yellow);">$673+</span></p>
+        <p style="color: var(--white); font-size: 19px; font-family: 'Bangers', cursive; letter-spacing: 1px;">Total Value <span style="float:right; color: var(--yellow);">$700+</span></p>
       </div>
     </div>
 
     <div class="price-actual">$27</div>
     <p class="price-note">No refunds. Scared money don't make no money.</p>
 
-    <p style="color: var(--grey-mid); margin-bottom: 12px; max-width: 520px; margin-left: auto; margin-right: auto; position: relative; font-size: 17px;">If you want to be abundant, that means freely outflowing without worries. One closed deal at 10% on a $10K offer = $1,000. If this playbook helps you land a role even one week faster, it pays for itself 50 times over.</p>
+    <p style="color: var(--grey-mid); margin-bottom: 12px; max-width: 520px; margin-left: auto; margin-right: auto; position: relative; font-size: 20px;">If you want to be abundant, that means freely outflowing without worries. One closed deal at 10% on a $10K offer = $1,000. If this playbook helps you land a role even one week faster, it pays for itself 50 times over.</p>
 
     <!-- HERO MOCKUP IMAGE -->
     <img loading="lazy" src="img-hero-mockup.png" alt="The Sales Rep Prospecting Playbook - Everything Included" class="hero-mockup">
@@ -995,6 +1087,44 @@ body::before {
     <a href="order.html" class="cta-btn" style="border-color: var(--yellow);">Get Instant Access for $27 →</a>
     <span class="cta-sub" style="color: var(--grey-mid);">Secure checkout on the next page.</span>
 
+  </div>
+</section>
+
+<!-- JOHN'S STORY -->
+<section class="story-section">
+  <div class="container">
+    <img loading="lazy" src="img-john-portrait.jpg" alt="John Schuette" class="story-photo">
+    <h2>Who Made This Thing</h2>
+
+    <p>My name is John Schuette. I'm not a career coach guru thing. I just can't fathom how people go so long without a sales role. Even more than a week baffles me.</p>
+
+    <p>I'm a mindset coach for experienced sales reps, business owners, and sales managers.</p>
+
+    <p>When I got started in sales it was a beautiful Missouri afternoon. I was driving around with my girlfriend at the time, and I had us drive to a Hyundai dealership. I picked Hyundai because I was scared of the big tough truck driving Ford guys and hoped I didn't have to face them at Hyundai.</p>
+
+    <p>I walked in at 19 years old, which is like 16 years younger than they typically hire for. They passed me through 4-5 different reps, managers, and finance guys, each interviewing me and trying to get me to buckle, and I didn't. I was there for 3 hours, my girlfriend STILL waiting in the car, and walked out with a work shirt and a job starting tomorrow.</p>
+
+    <img loading="lazy" src="img-john-yacht.jpg" alt="John Schuette" class="story-lifestyle">
+
+    <p>Next I did insurance MLM, which ain't much, then got a job selling merchant services. Once I quit both of those I started selling pools, which I got because of targeted outreach on Indeed and Monster and ZipRecruiter. I showed up, got trained in a hotel lobby, and was selling shortly after, doing traveling sales. A new city each week.</p>
+
+    <p>While traveling, I applied to about 100 roles on Indeed daily. I knew this was a 2 to 3 month long role, so I was on it. I had interviews between sales calls, sitting in my car in my Hawaiian shirt, and I was stacking job offers. Many I was turning down because they wouldn't pay to relocate me, which was what I was looking for.</p>
+
+    <p>Then I got into online high ticket. Got a role because I was in the Traffic and Funnels high ticket closer certification thing, which was a fantastic program, and I never got certified, but I got a role selling ecom. Then the company got shut down. I started a sales agency for 2 weeks, then quit when I aggressively pushed my way into brokering apartments, and they paid me 4k upfront so I could move to Denver.</p>
+
+    <p>I slept on a couch for a month while doing that until I was poached by a friend to sell in his company. When that company shut down, I had a role that week through connections. Then another company poached me. Then that sales team got shut down, so I got a referral through a friend and was selling the following week.</p>
+
+    <p><strong>Point is, you're the product.</strong> I was my own product, and I knew how to sell me because I had unreasonable confidence. And I did high volume to ensure I had an abundance of opportunities. Then, after a while, opportunities flowed to me easily.</p>
+
+    <p>So regardless of where you're at, don't wait for opportunities to come to you. Go get em.</p>
+
+    <p>This process will work for you IF you apply it. It's literally a high volume, outbound sales process across many platforms to land a $100K to $500K/year sales role. You do the qualification. You do the outreach.</p>
+
+    <p><strong>I just show you how, so you don't sit around on your ass anymore.</strong></p>
+
+    <div class="text-center" style="margin-top: 36px;">
+      <a href="order.html" class="cta-btn">Get The Playbook for $27 →</a>
+    </div>
   </div>
 </section>
 
