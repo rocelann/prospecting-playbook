@@ -4,6 +4,29 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Sales Rep Prospecting Playbook</title>
+
+<!-- TRACKING: Replace YOUR_GA_ID and YOUR_PIXEL_ID with real IDs -->
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=YOUR_GA_ID"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'YOUR_GA_ID');
+</script>
+<!-- Meta Pixel -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', 'YOUR_PIXEL_ID');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=YOUR_PIXEL_ID&ev=PageView&noscript=1"/></noscript>
+<!-- END TRACKING -->
+
 <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Oswald:wght@400;500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -328,7 +351,8 @@ body::before {
   position: relative;
 }
 .price-actual {
-  font-family: 'Bangers', cursive;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 700;
   font-size: clamp(56px, 10vw, 90px);
   color: var(--yellow);
   line-height: 1;
@@ -336,6 +360,7 @@ body::before {
   position: relative;
   text-shadow: 4px 4px 0 rgba(0,0,0,0.4);
   letter-spacing: 3px;
+  text-transform: uppercase;
 }
 .price-note {
   font-size: 16px;
@@ -834,6 +859,49 @@ body::before {
   box-shadow: 8px 8px 0 #B8972E;
 }
 
+/* ═══ TESTIMONIALS ═══ */
+.testimonial {
+  background: var(--black);
+  border: 3px solid var(--yellow);
+  box-shadow: 6px 6px 0 var(--yellow);
+  padding: 0;
+  margin: 36px 0;
+  overflow: hidden;
+}
+.testimonial img {
+  width: 100%;
+  display: block;
+}
+.testimonial-strip {
+  background: var(--black);
+  padding: 50px 0;
+  border-top: 5px solid var(--yellow);
+  border-bottom: 5px solid var(--yellow);
+}
+.testimonial-strip h2 {
+  font-family: 'Bangers', cursive;
+  font-size: clamp(28px, 4.5vw, 38px);
+  color: var(--yellow);
+  text-align: center;
+  margin-bottom: 36px;
+  text-shadow: 2px 2px 0 rgba(0,0,0,0.5);
+  letter-spacing: 1px;
+}
+.testimonial-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+.testimonial-grid .testimonial {
+  margin: 0;
+}
+@media (max-width: 600px) {
+  .testimonial-grid { grid-template-columns: 1fr; }
+}
+
 /* ═══ STORY SECTION ═══ */
 .story-section {
   padding: 60px 0;
@@ -932,6 +1000,13 @@ body::before {
   </div>
 </section>
 
+<!-- TESTIMONIAL: JACK -->
+<div class="container">
+  <div class="testimonial">
+    <img loading="lazy" src="testimonial-jack.jpg" alt="Jack landed a role in 4 days using the 5-day sprint">
+  </div>
+</div>
+
 <!-- BREAK BAR -->
 <div class="break-bar">You're a salesperson. The product is you. The prospect is the company. And right now, you're running zero pipeline on the most important deal of your career.</div>
 
@@ -949,6 +1024,13 @@ body::before {
     <p><strong>That's what this playbook fixes.</strong></p>
   </div>
 </section>
+
+<!-- TESTIMONIAL: AARON -->
+<div class="container">
+  <div class="testimonial">
+    <img loading="lazy" src="testimonial-aaron-1.jpg" alt="Aaron stacking interviews within days">
+  </div>
+</div>
 
 <!-- SOLUTION INTRO -->
 <section class="section">
@@ -971,70 +1053,54 @@ body::before {
     <div class="deliverable-card" data-number="01">
       <h4>The 5-Day Sprint Plan</h4>
       <p>Exactly what to do each day so you're not guessing.</p>
-      <span class="value-tag">Value: $97</span>
     </div>
 
     <div class="deliverable-card" data-number="02">
       <h4>Ideal Company Research Machine</h4>
       <img loading="lazy" src="img-ideal-company.png" alt="Ideal Company Research Machine" class="card-mockup">
-      <p>Journal about exactly what you want to sell and in what market, then take that and research all the companies you can find that match your ideal criteria, so you're only talking to potential perfect matches, every time.</p>
-      <span class="value-tag">Value: $27</span>
+      <p>Journal about exactly what you want to sell and in what market, then take that and research all the companies you can find that match your ideal criteria, so you're only talking to potential perfect matches, every time. Includes 6 step-by-step research strategies for Google, Skool, YouTube, Facebook Ads Library, Instagram, and LinkedIn. Copy, paste, run.</p>
     </div>
 
     <div class="deliverable-card" data-number="03">
-      <h4>6 Company Research Strategies</h4>
-      <img loading="lazy" src="img-research-system.png" alt="Company Research Strategies" class="card-mockup">
-      <p>Step-by-step Claude prompts for Google, Skool, YouTube, Facebook Ads Library, Instagram, and LinkedIn. Copy, paste, run.</p>
-      <span class="value-tag">Value: $27</span>
-    </div>
-
-    <div class="deliverable-card" data-number="04">
       <h4>A Complete Branding Toolkit</h4>
       <img loading="lazy" src="img-brand-builder.png" alt="The Brand Builder Kit" class="card-mockup">
       <p>Resume rebuild prompt, social media audit, master bio, cover photo generator, intro video script, group posting templates, and pre-written application answers. All copy-paste ready.</p>
-      <span class="value-tag">Value: $27</span>
     </div>
 
-    <div class="deliverable-card" data-number="05">
+    <div class="deliverable-card" data-number="04">
       <h4>Contact Scraping Walkthrough</h4>
       <img loading="lazy" src="img-contact-finder.png" alt="Contact Scraping Walkthrough" class="card-mockup">
       <p>The 7 best tools (all with free tiers) to get emails and phone numbers for decision-makers at every company on your list.</p>
-      <span class="value-tag">Value: $7</span>
     </div>
 
-    <div class="deliverable-card" data-number="06">
+    <div class="deliverable-card" data-number="05">
       <h4>Outreach Frameworks</h4>
       <img loading="lazy" src="img-double-tap.png" alt="Outreach Frameworks" class="card-mockup">
       <p>Cold call and cold email structures plus a 3-touch follow-up sequence.</p>
-      <span class="value-tag">Value: $7</span>
     </div>
 
-    <div class="deliverable-card grail-card" data-number="07">
+    <div class="deliverable-card grail-card" data-number="06">
       <h4>A Master Resource List</h4>
       <img loading="lazy" src="img-pipeline-list.png" alt="Master Resource List" class="card-mockup">
       <p>50+ sales recruiting agencies, DFY sales agencies, talent marketplaces, job boards, Facebook groups, Reddit communities, and freelance platforms. Register for all of them in one sitting.</p>
-      <span class="value-tag">Value: $27</span>
     </div>
 
-    <div class="deliverable-card" data-number="08">
+    <div class="deliverable-card" data-number="07">
       <h4>The Automated Job Search Engine</h4>
       <img loading="lazy" src="img-job-search.png" alt="Automated Job Search Engine" class="card-mockup">
       <p>One prompt that searches Indeed, ZipRecruiter, LinkedIn, Glassdoor, PhoneSales.com, Closers.io, Reddit, and more simultaneously. You get a prioritized list of roles with links.</p>
-      <span class="value-tag">Value: $127</span>
     </div>
 
-    <div class="deliverable-card" data-number="09">
+    <div class="deliverable-card" data-number="08">
       <h4>21 Questions to Vet Any Offer</h4>
       <img loading="lazy" src="img-vetting-checklist.png" alt="21 Questions to Vet Any Offer" class="card-mockup">
       <p>So you never end up on a dead role again. Plus a Claude prompt that calculates your realistic earning potential before you say yes.</p>
-      <span class="value-tag">Value: $30</span>
     </div>
 
-    <div class="deliverable-card" data-number="10">
+    <div class="deliverable-card" data-number="09">
       <h4>The Offer Evaluation Calculator</h4>
       <img loading="lazy" src="img-offer-calculator.png" alt="Offer Evaluation Calculator" class="card-mockup">
       <p>Dump everything you know about a potential role and get your realistic earning potential across best, average, and worst case scenarios with red flags identified before you accept.</p>
-      <span class="value-tag">Value: $27</span>
     </div>
 
     <div class="deliverable-card grail-card" data-number="BONUS">
@@ -1042,15 +1108,31 @@ body::before {
       <p>Here's the truth nobody talks about: most reps don't struggle with skills. They struggle with self-worth. They don't feel worthy of the $15K/month role. They don't feel confident enough to cold call a founder. They undersell themselves in interviews because deep down they don't believe they deserve the offer.</p>
       <p style="margin-top: 14px;">When you grab the playbook, you get access to the Delusional Confidence Masterclass designed to help you sell yourself on your own value so you show up to every conversation, every call, and every interview knowing exactly what you're worth.</p>
       <p style="margin-top: 14px;">To get access, just DM John on Instagram or Facebook after your purchase and say: "I want my self-worth masterclass right now. Give it to me."</p>
-      <span class="value-tag free-tag">FREE Bonus</span>
     </div>
 
     <div class="deliverable-card grail-card" data-number="BONUS">
       <h4>"Why Skilled Reps Don't Perform" Ebook + All Future Bonuses</h4>
       <p>When you buy today, you get access to the upcoming "Why Skilled Reps Don't Perform" ebook the moment it's complete, plus every bonus that ships with it. This is the book on why talented sales reps sabotage their own numbers and what to do about it. So when you land the role, your mental blocks don't get in the way of performing.</p>
-      <span class="value-tag free-tag">FREE Bonus (Value: $297+)</span>
     </div>
 
+  </div>
+</section>
+
+<!-- TESTIMONIAL STRIP -->
+<section class="testimonial-strip">
+  <div class="container">
+    <h2>Real Reps. Real Results.</h2>
+  </div>
+  <div class="testimonial-grid">
+    <div class="testimonial"><img loading="lazy" src="testimonial-3mil.jpg" alt="Onboarded on 3mil/month offer in 3 business days"></div>
+    <div class="testimonial"><img loading="lazy" src="testimonial-jack.jpg" alt="Landed a role in 4 days"></div>
+    <div class="testimonial"><img loading="lazy" src="testimonial-aaron-2.jpg" alt="Stacking interviews using the sprint"></div>
+    <div class="testimonial"><img loading="lazy" src="testimonial-interview.jpg" alt="Got another interview thanks to the outreach playbook"></div>
+    <div class="testimonial"><img loading="lazy" src="testimonial-max.jpg" alt="Resume prompt alone was worth the $27"></div>
+    <div class="testimonial"><img loading="lazy" src="testimonial-taha.jpg" alt="Really good, loved the detail and prompts"></div>
+    <div class="testimonial"><img loading="lazy" src="testimonial-worth270.jpg" alt="Should be $270"></div>
+    <div class="testimonial"><img loading="lazy" src="testimonial-course.jpg" alt="Like a proper paid course"></div>
+    <div class="testimonial"><img loading="lazy" src="testimonial-applied.jpg" alt="Applied advice to older posts, got 2 interviews"></div>
   </div>
 </section>
 
@@ -1060,8 +1142,7 @@ body::before {
 
     <div style="max-width: 480px; margin: 0 auto 36px; text-align: left; position: relative;">
       <p style="color: var(--grey-mid); margin-bottom: 8px; font-size: 20px;">5-Day Sprint Plan <span style="float:right; color: var(--white);">$97</span></p>
-      <p style="color: var(--grey-mid); margin-bottom: 8px; font-size: 20px;">Ideal Company Research Machine <span style="float:right; color: var(--white);">$27</span></p>
-      <p style="color: var(--grey-mid); margin-bottom: 8px; font-size: 20px;">6 Company Research Strategies <span style="float:right; color: var(--white);">$27</span></p>
+      <p style="color: var(--grey-mid); margin-bottom: 8px; font-size: 20px;">Ideal Company Research Machine <span style="float:right; color: var(--white);">$54</span></p>
       <p style="color: var(--grey-mid); margin-bottom: 8px; font-size: 20px;">Complete Branding Toolkit <span style="float:right; color: var(--white);">$27</span></p>
       <p style="color: var(--grey-mid); margin-bottom: 8px; font-size: 20px;">Contact Scraping Walkthrough <span style="float:right; color: var(--white);">$7</span></p>
       <p style="color: var(--grey-mid); margin-bottom: 8px; font-size: 20px;">Outreach Frameworks <span style="float:right; color: var(--white);">$7</span></p>

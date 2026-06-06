@@ -4,6 +4,30 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Order — The Sales Rep Prospecting Playbook</title>
+
+<!-- TRACKING: Replace YOUR_GA_ID and YOUR_PIXEL_ID with real IDs -->
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=YOUR_GA_ID"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'YOUR_GA_ID');
+</script>
+<!-- Meta Pixel -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', 'YOUR_PIXEL_ID');
+fbq('track', 'PageView');
+fbq('track', 'InitiateCheckout');
+</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=YOUR_PIXEL_ID&ev=PageView&noscript=1"/></noscript>
+<!-- END TRACKING -->
+
 <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Oswald:wght@400;500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
 <script src="https://js.stripe.com/v3/"></script>
 <style>
@@ -440,6 +464,10 @@ async function handlePayment() {
       name, email, phone, payment_id: result.paymentIntent.id
     }));
 
+    // Fire tracking events on successful purchase
+    if (typeof fbq !== 'undefined') fbq('track', 'Purchase', { value: total/100, currency: 'USD' });
+    if (typeof gtag !== 'undefined') gtag('event', 'purchase', { value: total/100, currency: 'USD' });
+
     window.location.href = 'upsell.html';
 
   } catch (err) {
@@ -449,6 +477,76 @@ async function handlePayment() {
 }
 
 document.addEventListener('keydown', function(e) { if (e.key === 'Enter') { e.preventDefault(); handlePayment(); } });
+
+// ═══ ABANDONED CART CAPTURE ═══
+// Fires when someone fills in email/phone but leaves without paying
+(function() {
+  const ABANDON_WEBHOOK = 'https://services.leadconnectorhq.com/hooks/EjQAaziLbBXhpUgNMwoO/webhook-trigger/c48d5d64-ade8-4943-9f3d-155b09a0b818';
+  let hasPurchased = false;
+  let abandonSent = false;
+
+  // Mark as purchased so we don't fire abandon on redirect
+  const origHandlePayment = window.handlePayment;
+
+  // Listen for page unload
+  function sendAbandon() {
+    if (hasPurchased || abandonSent) return;
+    const email = document.getElementById('email').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    if (!email && !phone) return; // No info to capture
+
+    abandonSent = true;
+    const name = document.getElementById('name').value.trim();
+    const data = JSON.stringify({
+      name: name || 'Unknown',
+      email: email || '',
+      phone: phone || '',
+      marketing_optin: document.getElementById('optin').checked,
+      product: 'prospecting-playbook-abandoned',
+      addons: {
+        tracker: bumps.tracker.selected,
+        commissions_xray: bumps.xray.selected,
+        market_mind: bumps.market.selected
+      },
+      amount_paid: 0,
+      payment_id: 'ABANDONED_' + Date.now(),
+      timestamp: new Date().toISOString()
+    });
+
+    try { navigator.sendBeacon(ABANDON_WEBHOOK, new Blob([data], { type: 'application/json' })); }
+    catch (e) { /* silent fail */ }
+  }
+
+  // Also capture on blur after typing email/phone (debounced)
+  let captureTimer = null;
+  function debouncedCapture() {
+    clearTimeout(captureTimer);
+    captureTimer = setTimeout(function() {
+      const email = document.getElementById('email').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      if ((email && email.includes('@')) || (phone && phone.length >= 7)) {
+        // Track that they started filling in info
+        if (typeof fbq !== 'undefined') fbq('track', 'AddToCart');
+      }
+    }, 2000);
+  }
+
+  document.getElementById('email').addEventListener('blur', debouncedCapture);
+  document.getElementById('phone').addEventListener('blur', debouncedCapture);
+
+  // Fire on page leave
+  window.addEventListener('beforeunload', sendAbandon);
+  document.addEventListener('visibilitychange', function() {
+    if (document.visibilityState === 'hidden') sendAbandon();
+  });
+
+  // Patch: mark as purchased when payment succeeds
+  const origRedirect = window.location.href;
+  const observer = new MutationObserver(function() {
+    if (document.getElementById('pay-btn').disabled) hasPurchased = true;
+  });
+  observer.observe(document.getElementById('pay-btn'), { attributes: true });
+})();
 </script>
 </body>
 </html>
