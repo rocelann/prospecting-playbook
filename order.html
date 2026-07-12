@@ -29,7 +29,7 @@ fbq('track', 'InitiateCheckout');
 <!-- END TRACKING -->
 
 <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Oswald:wght@400;500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
-<script src="https://js.stripe.com/v3/"></script>
+<script src="https://secure.nmi.com/token/Collect.js" data-tokenization-key="checkout_public_j286J8Cha8YhKG7Em8e85WKfKf37d3ay" data-variant="inline"></script>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
@@ -315,19 +315,29 @@ body::after {
       <span class="optin-label">I agree to receive texts and emails about sales training, tips, and offers. Unsubscribe anytime.</span>
     </label>
 
-    <!-- STRIPE CARD ELEMENT -->
+    <!-- CARD FIELDS (NMI Collect.js) -->
     <div class="stripe-container">
-      <label>Card Details</label>
-      <div id="card-element"></div>
-      <div id="card-errors" role="alert"></div>
+      <label>Card Number</label>
+      <div id="ccnumber"></div>
     </div>
+    <div style="display: flex; gap: 12px;">
+      <div class="stripe-container" style="flex: 1;">
+        <label>Expiration</label>
+        <div id="ccexp"></div>
+      </div>
+      <div class="stripe-container" style="flex: 1;">
+        <label>CVV</label>
+        <div id="cvv"></div>
+      </div>
+    </div>
+    <div id="card-errors" role="alert" style="color: #D42020; font-size: 14px; margin-top: 8px;"></div>
 
     <!-- PAY BUTTON -->
     <button type="button" class="pay-btn" id="pay-btn" onclick="handlePayment()">
       Pay $27 Now →
     </button>
 
-    <p class="secure-note">Secure 256-bit encrypted payment via Stripe</p>
+    <p class="secure-note">Secure 256-bit encrypted payment via Deposyt</p>
   </div>
 
   <a href="index.html" class="back-link">← Back to playbook details</a>
@@ -335,9 +345,55 @@ body::after {
 
 <script>
 const GHL_WEBHOOK_URL = 'https://services.leadconnectorhq.com/hooks/EjQAaziLbBXhpUgNMwoO/webhook-trigger/c48d5d64-ade8-4943-9f3d-155b09a0b818';
-const STRIPE_PK = 'pk_live_51IWTnMJwKAUW9raswvCsRXsAv3BpeUsNYax8mLHZbJl2TL2QXf7b7MojYyF5bc0zVU4iXuamIRPRl1ebczAQDKx800ZzUBaKDo';
-const CREATE_PAYMENT_INTENT_URL = '/api/create-payment-intent';
+const CREATE_PAYMENT_URL = '/api/create-payment-intent';
 
+// NMI Collect.js - configure inline fields
+let paymentToken = null;
+
+document.addEventListener('DOMContentLoaded', function() {
+  function initCollect() {
+    if (typeof CollectJS === 'undefined') {
+      setTimeout(initCollect, 500);
+      return;
+    }
+    CollectJS.configure({
+      variant: 'inline',
+      styleSniffer: 'true',
+      fields: {
+        ccnumber: { selector: '#ccnumber', title: 'Card Number', placeholder: '0000 0000 0000 0000' },
+        ccexp: { selector: '#ccexp', title: 'Expiration', placeholder: 'MM / YY' },
+        cvv: { selector: '#cvv', title: 'CVV', placeholder: '***' }
+      },
+      customCss: {
+        'border': '2px solid #0A0A0A',
+        'padding': '12px',
+        'border-radius': '0',
+        'font-size': '17px',
+        'font-family': "'EB Garamond', Georgia, serif",
+        'background-color': '#FFFFFF',
+        'height': '46px'
+      },
+      focusCss: {
+        'border': '2px solid #FFD100'
+      },
+      invalidCss: {
+        'border': '2px solid #D42020'
+      },
+      validationCallback: function(field, status, message) {
+        if (status) {
+          document.getElementById('card-errors').textContent = '';
+        } else {
+          document.getElementById('card-errors').textContent = message;
+        }
+      },
+      callback: function(response) {
+        paymentToken = response.token;
+        processPayment();
+      }
+    });
+  }
+  initCollect();
+});
 // Bump state
 const bumps = { tracker: { selected: false, price: 4 }, xray: { selected: false, price: 17 }, market: { selected: false, price: 47 } };
 const BASE = 27;
@@ -369,33 +425,11 @@ function updateTotal() {
   document.getElementById('pay-btn').textContent = 'Pay $' + total + ' Now →';
 }
 
-// Stripe - wait for library to load
-let stripe, elements, cardElement;
-
-function initStripe() {
-  if (typeof Stripe === 'undefined') {
-    setTimeout(initStripe, 500);
-    return;
-  }
-  stripe = Stripe(STRIPE_PK);
-  elements = stripe.elements();
-  cardElement = elements.create('card', {
-    style: {
-      base: { fontFamily: "'EB Garamond', Georgia, serif", fontSize: '17px', color: '#0A0A0A', '::placeholder': { color: '#bbb' } },
-      invalid: { color: '#D42020' }
-    }
-  });
-  cardElement.mount('#card-element');
-  cardElement.on('change', function(e) { document.getElementById('card-errors').textContent = e.error ? e.error.message : ''; });
-}
-
-document.addEventListener('DOMContentLoaded', initStripe);
-
+// handlePayment triggers Collect.js tokenization, which calls processPayment via callback
 async function handlePayment() {
   const name = document.getElementById('name').value.trim();
   const email = document.getElementById('email').value.trim();
   const phone = document.getElementById('phone').value.trim();
-  const optin = document.getElementById('optin').checked;
   const btn = document.getElementById('pay-btn');
 
   ['name-error', 'email-error', 'phone-error'].forEach(function(id) { document.getElementById(id).style.display = 'none'; });
@@ -408,28 +442,46 @@ async function handlePayment() {
 
   btn.disabled = true;
   btn.textContent = 'Processing...';
+  document.getElementById('card-errors').textContent = '';
+
+  // Trigger Collect.js tokenization — it calls processPayment() via the callback
+  CollectJS.startPaymentRequest();
+}
+
+async function processPayment() {
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  const optin = document.getElementById('optin').checked;
+  const btn = document.getElementById('pay-btn');
+
+  if (!paymentToken) {
+    document.getElementById('card-errors').textContent = 'Card processing failed. Please try again.';
+    btn.disabled = false; updateTotal();
+    return;
+  }
 
   try {
     const total = getTotal();
-    const res = await fetch(CREATE_PAYMENT_INTENT_URL, {
+    const res = await fetch(CREATE_PAYMENT_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        amount: total * 100, email, name,
+        payment_token: paymentToken,
+        amount: total * 100,
+        email, name,
         tracker: bumps.tracker.selected,
         xray: bumps.xray.selected,
         market: bumps.market.selected
       })
     });
-    const { clientSecret } = await res.json();
+    const data = await res.json();
 
-    const result = await stripe.confirmCardPayment(clientSecret, {
-      payment_method: { card: cardElement, billing_details: { name, email, phone } }
-    });
-
-    if (result.error) {
-      document.getElementById('card-errors').textContent = result.error.message;
-      btn.disabled = false; updateTotal(); return;
+    if (!data.success) {
+      document.getElementById('card-errors').textContent = data.error || 'Payment declined. Please try again.';
+      btn.disabled = false; updateTotal();
+      paymentToken = null;
+      return;
     }
 
     // Fire GHL webhook - await it before redirecting
@@ -442,8 +494,7 @@ async function handlePayment() {
         market_mind: bumps.market.selected
       },
       amount_paid: total,
-      payment_id: result.paymentIntent.id,
-      setup_intent: result.paymentIntent.id,
+      payment_id: data.transaction_id,
       timestamp: new Date().toISOString()
     });
 
@@ -454,25 +505,25 @@ async function handlePayment() {
         body: webhookData
       });
     } catch (err) {
-      // If fetch fails, try sendBeacon as backup
       try { navigator.sendBeacon(GHL_WEBHOOK_URL, new Blob([webhookData], { type: 'application/json' })); }
       catch (e) { console.warn('Webhook backup also failed:', e); }
     }
 
     // Store payment info for upsell page
     sessionStorage.setItem('pp_customer', JSON.stringify({
-      name, email, phone, payment_id: result.paymentIntent.id
+      name, email, phone, payment_id: data.transaction_id
     }));
 
     // Fire tracking events on successful purchase
-    if (typeof fbq !== 'undefined') fbq('track', 'Purchase', { value: total/100, currency: 'USD' });
-    if (typeof gtag !== 'undefined') gtag('event', 'purchase', { value: total/100, currency: 'USD' });
+    if (typeof fbq !== 'undefined') fbq('track', 'Purchase', { value: total, currency: 'USD' });
+    if (typeof gtag !== 'undefined') gtag('event', 'purchase', { value: total, currency: 'USD' });
 
     window.location.href = 'upsell.html';
 
   } catch (err) {
     document.getElementById('card-errors').textContent = 'Something went wrong. Please try again.';
     btn.disabled = false; updateTotal();
+    paymentToken = null;
   }
 }
 
