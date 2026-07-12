@@ -509,25 +509,22 @@ async function processPayment() {
       catch (e) { console.warn('Webhook backup also failed:', e); }
     }
 
-    // Fire Slack notification via Zapier
+    // Fire Slack notification via Zapier (sendBeacon bypasses CORS)
     try {
-      await fetch('https://hooks.zapier.com/hooks/catch/8137009/4ugap6n/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: name,
-          email: email,
-          amount: total,
-          product: 'Prospecting Playbook',
-          bumps: [
-            bumps.tracker.selected ? 'Tracker ($4)' : '',
-            bumps.xray.selected ? 'X-Ray ($17)' : '',
-            bumps.market.selected ? 'Market Mind ($47)' : ''
-          ].filter(Boolean).join(', ') || 'None',
-          transaction_id: data.transaction_id,
-          timestamp: new Date().toISOString()
-        })
+      const slackData = JSON.stringify({
+        name: name,
+        email: email,
+        amount: total,
+        product: 'Prospecting Playbook',
+        bumps: [
+          bumps.tracker.selected ? 'Tracker ($4)' : '',
+          bumps.xray.selected ? 'X-Ray ($17)' : '',
+          bumps.market.selected ? 'Market Mind ($47)' : ''
+        ].filter(Boolean).join(', ') || 'None',
+        transaction_id: data.transaction_id,
+        timestamp: new Date().toISOString()
       });
+      navigator.sendBeacon('https://hooks.zapier.com/hooks/catch/8137009/4ugap6n/', new Blob([slackData], { type: 'application/json' }));
     } catch (e) { /* silent */ }
 
     // Store payment info for upsell page
